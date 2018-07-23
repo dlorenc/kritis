@@ -19,6 +19,7 @@ Kritis relies on user defined `ImageSecurityPolicies` to determine whether a pod
 
 First, you will need to specify an `ImageSecurityPolicy`. 
 A sample is shown here:
+
 ```yaml
 apiVersion: kritis.grafeas.io/v1beta1
 kind: ImageSecurityPolicy
@@ -36,6 +37,7 @@ spec:
       - providers/goog-vulnz/notes/CVE-2017-1000082
       - providers/goog-vulnz/notes/CVE-2017-1000081
 ```
+
 | Field         | Possible Values           | Details  |
 | ------------- | ------------- | ----- |
 | imageWhitelist  | | A list of images that are whitelisted and should always be allowed. |
@@ -50,6 +52,7 @@ $ kubectl create -f image-security-policy.yaml
 ```
 
 ### Fully Qualified Images
+
 When deploying pods, images must be fully qualified with digests.
 This is necessary because tags are mutable, and kritis may not get the correct vulnerability information for a tagged image.
 
@@ -58,6 +61,7 @@ We provide [resolve-tags](https://github.com/grafeas/kritis/blob/master/cmd/krit
 If you need to deploy tagged images, you can add them to the `imageWhitelist` in your image security policy.
 
 ### Breakglass Annotation
+
 To deploy a pod without any validation checks, you can add a breakglass annotation to your pod.
 ```yaml
 apiVersion: v1
@@ -76,6 +80,7 @@ spec:
 ```
 
 ### Deploying Pods
+
 Now, when you deploy pods kritis will validate them against all `ImageSecurityPolicies` found in the same namespace.
 We can deploy a pod with a whitelisted image, which will be allowed:
 
@@ -85,18 +90,21 @@ $ kubectl create -f integration/testdata/nginx/nginx-digest-whitelist.yaml
 ```
 
 We can deploy an unqualified image, which is whitelisted:
+
 ```
 $ kubectl create -f integration/testdata/nginx/nginx-no-digest-whitelist.yaml 
     pod "nginx-no-digest-whitelist" created
 ```
 
 We can deploy any pod with the breakglass annotation:
+
 ```
 $ kubectl create -f integration/testdata/nginx/nginx-no-digest-breakglass.yaml 
     pod "nginx-no-digest-breakglass" created
 ```
 
 However, an unqualified image that isn't whitelisted will be denied:
+
 ```
 $ kubectl create -f integration/testdata/nginx/nginx-no-digest.yaml
     Error from server: error when creating "integration/testdata/nginx/nginx-no-digest.yaml": admission webhook 
@@ -105,6 +113,7 @@ $ kubectl create -f integration/testdata/nginx/nginx-no-digest.yaml
 ```
 
 An image with violation that exceed the max severity defined in the image security policy will also be denied:
+
 ```
 kubectl create -f integration/testdata/java/java-with-vuln.yaml 
     Error from server: error when creating "integration/testdata/java/java-with-vuln.yaml ": admission webhook 
@@ -113,6 +122,7 @@ kubectl create -f integration/testdata/java/java-with-vuln.yaml
 ```
 
 To get more information about why a request was denied, you can look at the logs for the kritis webhook pod:
+
 ```
 $ kubectl get pods
 NAME                                      READY     STATUS    RESTARTS   AGE

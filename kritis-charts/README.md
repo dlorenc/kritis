@@ -20,10 +20,13 @@ Instructions can be found in the `Before you Begin` section of the [Getting Imag
 kritis can only inspect images hosted in projects that have both of these enabled, and have already been scanned for vulnerabilities.
 
 ### Creating a Container Analysis Secret
+
 You will need to create a Kubernetes secret, which will provide kritis with the auth required to get vulnerability information for images. You can create the secret through the Google Cloud Console or on the command line with gcloud.
 
 #### Creating Container Analysis Secret via Google Cloud Console
+
 To create the secret:
+
 1. Create a service account with `Container Analysis Notes Viewer`, `Container Analysis Notes Editor`, `Container Analysis Occurrences Viewer`, and `Container Analysis Occurrences Editor` permissions in the Google Cloud Console project that hosts the images kritis will be inspecting
 2. Download a JSON key for the service account
 3. Rename the key to `kritis.json`
@@ -33,6 +36,7 @@ kubectl create secret generic gac-secret --from-file=<path to kritis.json>
 ```
 
 #### Creating Container Analysis Secret via Command Line
+
 1. First create the service account
 ```
 gcloud iam service-accounts create ACC_NAME --display-name DISPLAY_NAME
@@ -63,9 +67,11 @@ gcloud projects add-iam-policy-binding PROJECT_ID--member=serviceAccount:ACC_NAM
 ```
 
 ### Installing Helm
+
 You will need [helm](https://docs.helm.sh/using_helm/) installed to install kritis.
 
 ## Installing Kritis
+
 1. To install kritis via helm, we need to first generate TLS certs.
    To do that,
    1. First download the helm plugin to generate certs from [here](https://github.com/SUSE/helm-certgen/releases)
@@ -74,6 +80,7 @@ You will need [helm](https://docs.helm.sh/using_helm/) installed to install krit
       tar -xvf certgen-linux-amd64-1-0-0-1501794790-f3b21c90.tgz --directory ~/certgen/
       helm plugin install ~/certgen/
       ```
+
 2. Now run the install script.
    This should create TLS certs, deploy kritis in given namespace.
 
@@ -113,6 +120,7 @@ You will need [helm](https://docs.helm.sh/using_helm/) installed to install krit
     kritis-clusterrole  0s
     ```
     Helm will create a cluster role and cluster role binding, which gives the kritis deployment access to the ImageSecurityPolicy CRD.
+
 3. You can delete all the deployments using the release name.
    ```
    helm delete whimsical-cricket
